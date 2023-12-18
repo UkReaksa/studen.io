@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Library System</h2>
+
+    <form id="bookForm">
+        <label for="title">Title:</label>
+        <input type="text" id="title" required>
+        <label for="author">Author:</label>
+        <input type="text" id="author" required>
+        <button type="button" onclick="addBook()">Add Book</button>
+    </form>
+
+    <form id="searchForm">
+        <label for="search">Search:</label>
+        <input type="text" id="search" oninput="searchBooks()" placeholder="Enter title or author">
+    </form>
+
+    <form id="removeForm">
+        <label for="removeTitle">Remove Book by Title:</label>
+        <input type="text" id="removeTitle" required>
+        <button type="button" onclick="removeBook()">Remove Book</button>
+    </form>
+
+    <table id="bookTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Books will be added here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        function addBook() {
+            const titleInput = document.getElementById("title");
+            const authorInput = document.getElementById("author");
+            const bookTable = document.getElementById("bookTable").getElementsByTagName('tbody')[0];
+
+            const title = titleInput.value.trim();
+            const author = authorInput.value.trim();
+
+            if (title !== "" && author !== "") {
+                const newRow = bookTable.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                const cell3 = newRow.insertCell(2);
+
+                cell1.textContent = title;
+                cell2.textContent = author;
+
+                const studyButton = document.createElement("button");
+                studyButton.textContent = "Study";
+                studyButton.onclick = function () {
+                    alert("You are now studying " + title);
+                };
+
+                cell3.appendChild(studyButton);
+
+                titleInput.value = "";
+                authorInput.value = "";
+            }
+        }
+
+        function searchBooks() {
+            const searchInput = document.getElementById("search").value.toLowerCase();
+            const bookTable = document.getElementById("bookTable").getElementsByTagName('tbody')[0];
+            const rows = bookTable.getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+                const title = rows[i].getElementsByTagName("td")[0].textContent.toLowerCase();
+                const author = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase();
+
+                if (title.includes(searchInput) || author.includes(searchInput)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+        function removeBook() {
+            const removeTitleInput = document.getElementById("removeTitle").value.trim();
+            const bookTable = document.getElementById("bookTable").getElementsByTagName('tbody')[0];
+            const rows = bookTable.getElementsByTagName("tr");
+
+            for (let i = rows.length - 1; i >= 0; i--) {
+                const title = rows[i].getElementsByTagName("td")[0].textContent.trim();
+
+                if (title.toLowerCase() === removeTitleInput.toLowerCase()) {
+                    bookTable.deleteRow(i);
+                    break;
+                }
+            }
+
+            document.getElementById("removeTitle").value = "";
+        }
+    </script>
+</body>
+
+</html>
